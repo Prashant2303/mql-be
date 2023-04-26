@@ -8,6 +8,7 @@ app.use(express.json());
 app.use(cors());
 
 const PORT = process.env.PORT || 3001;
+console.log(process.env.TEST_ENV);
 
 app.listen(PORT, () => {
     console.log(`Server Started at ${PORT}`)
