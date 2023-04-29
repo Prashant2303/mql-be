@@ -14,7 +14,7 @@ function getUserFromToken(req) {
             token
         };
     } catch (err) {
-        throw err.name;
+        throw err;
     }
 }
 

@@ -1,4 +1,4 @@
-import { apiHandler, getUserFromToken } from 'helpers/api-handler';
+import { apiHandler, getUserFromToken } from '../helpers/api-handler.js';
 import { ObjectId } from 'mongodb';
 
 export default apiHandler({
@@ -11,8 +11,8 @@ function handler() {
     return { get, _delete, patch };
 
     async function get({ req, res, listsCollection }) {
-        const { listId } = req.query;
-        const result = await listsCollection.findOne({ _id: ObjectId(listId) }, { projection: { questions: 1, _id: 0 } });
+        const { id: listId } = req.params;
+        const result = await listsCollection.findOne({ _id: new ObjectId(listId) }, { projection: { questions: 1, _id: 0 } });
         return res.status(200).json(result?.questions);
     }
 
