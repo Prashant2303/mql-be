@@ -1,4 +1,4 @@
-import { apiHandler, getUserFromToken } from "helpers/api-handler";
+import { apiHandler, getUserFromToken } from "../helpers/api-handler.js";
 
 export default apiHandler({
     patch: handler().patch,
@@ -9,7 +9,7 @@ function handler() {
     return { patch, _delete }
 
     async function patch({ req, res, usersCollection }) {
-        const { userId } = req.query;
+        const { id: userId } = req.params;
         const { user, userString } = getUserFromToken(req);
 
         if (userId !== userString) throw 'Not Authorized';
@@ -20,7 +20,7 @@ function handler() {
     }
 
     async function _delete({ req, res, usersCollection, listsCollection }) {
-        const { userId } = req.query;
+        const { id: userId } = req.params;
         const { user, userString } = getUserFromToken(req);
 
         if (userId !== userString) throw 'Not Authorized';

@@ -15,21 +15,21 @@ function handler() {
         const result = await listsCollection.findOne({ _id: new ObjectId(listId) }, { projection: { questions: 1, _id: 0 } });
         return res.status(200).json(result?.questions);
     }
-
+    
     async function _delete({ req, res, listsCollection, usersCollection }) {
-        const { listId } = req.query;
+        const { id: listId } = req.params;
         const { user } = getUserFromToken(req);
         const userDefaultList = usersCollection.findOne(user, { projection: { defaultList: 1, _id: 0 } });
-
+        
         if (userDefaultList === listId) throw 'Cannot delete default List';
-
-        const result = await listsCollection.deleteOne({ _id: ObjectId(listId) });
+        
+        const result = await listsCollection.deleteOne({ _id: new ObjectId(listId) });
         return res.status(200).json(result);
     }
-
+    
     async function patch({ req, res, listsCollection }) {
-        const { listId } = req.query;
-        const targetList = { _id: ObjectId(listId) }
+        const { id: listId } = req.params;
+        const targetList = { _id: new ObjectId(listId) }
 
         const { ownerId } = await listsCollection.findOne(targetList, { projection: { ownerId: 1, _id: 0 } });
         const ownerOfList = ownerId.toString();

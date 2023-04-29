@@ -1,4 +1,4 @@
-import { apiHandler, getUserFromToken } from 'helpers/api-handler';
+import { apiHandler, getUserFromToken } from '../helpers/api-handler.js';
 
 export default apiHandler({
     get: handler().get,
@@ -6,7 +6,6 @@ export default apiHandler({
 })
 
 function handler() {
-    console.log('Inside getPublicListHandler');
     return { get, post };
 
     async function get({ req, res, listsCollection }) {
