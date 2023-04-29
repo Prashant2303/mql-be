@@ -19,7 +19,6 @@ function getUserFromToken(req) {
 }
 
 function apiHandler(handler) {
-    console.log('Inside handler');
     return async (req, res) => {
         const method = req.method.toLowerCase();
 
