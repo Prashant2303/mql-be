@@ -4,6 +4,7 @@ import signUp from './users/signup.js';
 import user from './users/userById.js';
 import lists from './lists/index.js';
 import listById from './lists/listById.js';
+import questions from './questions/index.js';
 
 const router = express.Router();
 
@@ -17,5 +18,9 @@ router.delete('/lists/:id', listById);
 router.patch('/lists/:id', listById);
 router.get('/lists', lists);
 router.post('/lists', lists);
+
+router.post('/questions/*', questions);
+router.patch('/questions/*/*', questions);
+router.delete('/questions/*/*', questions);
 
 export default router;

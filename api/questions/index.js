@@ -1,4 +1,4 @@
-import { apiHandler, getUserFromToken } from "helpers/api-handler";
+import { apiHandler, getUserFromToken } from "../helpers/api-handler.js";
 import { v4 as uuidv4 } from 'uuid';
 import { ObjectId } from "mongodb";
 
@@ -12,9 +12,9 @@ function handler() {
     return { post, _delete, patch };
 
     async function post({ req, res, listsCollection }) {
-        const selectedList = req.query.params[0];
-        const targetList = { _id: ObjectId(selectedList) }
-
+        const selectedList = req.params[0];
+        const targetList = { _id: new ObjectId(selectedList) }
+        
         const { ownerId } = await listsCollection.findOne(targetList, { projection: { ownerId: 1, _id: 0 } });
         const ownerOfList = ownerId.toString();
         const { userString } = getUserFromToken(req);
@@ -26,27 +26,27 @@ function handler() {
         await listsCollection.updateOne(targetList, { $push: { questions: { $each: [question], $position: 0 } } })
         return res.status(200).json(question);
     }
-
+    
     async function _delete({ req, res, listsCollection }) {
-        const { params } = req.query;
+        const { params } = req;
         const selectedList = params[0];
-        const targetList = { _id: ObjectId(selectedList) }
-
+        const targetList = { _id: new ObjectId(selectedList) }
+        
         const { ownerId } = await listsCollection.findOne(targetList, { projection: { ownerId: 1, _id: 0 } });
         const ownerOfList = ownerId.toString();
         const { userString } = getUserFromToken(req);
         if (userString !== ownerOfList) throw 'Only the list owner can modify their list';
-
+        
         const questionId = params[1];
         const removeResult = await listsCollection.updateOne(targetList, { $pull: { questions: { id: questionId } } })
         if(removeResult.modifiedCount) return res.status(200).json({ message: removeResult });
         return res.status(400).json({ message: 'Item not found' })
     }
-
+    
     async function patch({ req, res, listsCollection }) {
-        const { params } = req.query;
+        const { params } = req;
         const selectedList = params[0];
-        const targetList = { _id: ObjectId(selectedList) }
+        const targetList = { _id: new ObjectId(selectedList) }
 
         const { ownerId } = await listsCollection.findOne(targetList, { projection: { ownerId: 1, _id: 0 } });
         const ownerOfList = ownerId.toString();
