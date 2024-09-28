@@ -72,3 +72,51 @@ export async function connectToDatabase() {
         throw "COULDN'T CONNECT TO DATABASE"
     }
 }
+
+// TO BE MOVED TO MIDDLEWARES
+export async function dbHandler(req, res, next) {
+    //return cached values if connection is already established
+    if (cachedClient && cachedDb && cachedUsersCollection && cachedListsCollection) {
+        console.log('CACHE HIT');
+        res.locals.db = {
+            client: cachedClient,
+            db: cachedDb,
+            usersCollection: cachedUsersCollection,
+            listsCollection: cachedListsCollection
+        }
+        next();
+        return;
+    }
+
+    console.log('CACHE MISS');
+    const client = new MongoClient(uri);
+
+    try {
+        //CONNECT
+        await client.connect();
+        console.log('Connected to DB...');
+        const db = client.db(dbName)
+        const usersCollection = db.collection(usersCollectionName);
+        const listsCollection = db.collection(listsCollectionName);
+
+        //CACHE
+        cachedClient = client;
+        cachedDb = db;
+        cachedUsersCollection = usersCollection;
+        cachedListsCollection = listsCollection;
+        console.log('CACHE SET');
+
+        //RETURN
+        res.locals.db = {
+            client: cachedClient,
+            db: cachedDb,
+            usersCollection: cachedUsersCollection,
+            listsCollection: cachedListsCollection
+        }
+        next();
+    } catch (err) {
+        console.log(err);
+        throw "COULDN'T CONNECT TO DATABASE"
+    }
+
+}

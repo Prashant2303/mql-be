@@ -1,4 +1,3 @@
-import { apiHandler } from '../helpers/api-handler.js';
 import { ObjectId } from 'mongodb';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
@@ -11,11 +10,9 @@ const model = genAI.getGenerativeModel({
     },
 });
 
-export default apiHandler({ get });
-
-async function get({ req, res, listsCollection }) {
+export async function getSuggestions(req, res) {
     const { listId } = req.params;
-
+    const { listsCollection } = res.locals.db;
     const result = await listsCollection.findOne({ _id: new ObjectId(listId) }, { projection: { questions: 1, _id: 0 } });
 
     const questions = result?.questions;
