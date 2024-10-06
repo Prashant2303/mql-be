@@ -3,10 +3,13 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import apiRouter from './routes.js';
 
+import { morganMiddleware } from './middlewares/morgan.js';
+
 const app = express();
 dotenv.config();
 app.use(express.json());
 app.use(cors());
+app.use(morganMiddleware);
 
 const PORT = process.env.PORT || 3001;
 
