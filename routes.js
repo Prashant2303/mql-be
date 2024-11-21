@@ -4,7 +4,7 @@ import signUp from './api/users/signup.js';
 import user from './api/users/userById.js';
 import lists from './api/lists/index.js';
 import listById from './api/lists/listById.js';
-import questions from './api/questions/index.js';
+import questions, { checkQuestion } from './api/questions/index.js';
 import { getSuggestions } from './api/lists/suggestions.js';
 import { getPublicListById, getPublicLists } from './api/public-lists/index.js';
 import { dbHandler } from './api/helpers/db.js';
@@ -31,5 +31,7 @@ router.get('/suggestions/:listId', authCheck, dbHandler, getSuggestions);
 
 router.get('/public-lists', dbHandler, getPublicLists);
 router.get('/public-lists/:listId', dbHandler, getPublicListById);
+
+router.post('/check-question', authCheck, dbHandler, checkQuestion);
 
 export default router;
